@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  app:
+    build: ./
+    volumes:
+      - ..:/usr/src/app:cached
+      - ~/.ssh:/home/node/.ssh
+    environment:
+      NODE_ENV: development
+      DBHOST: 'db'
+      # BASEURL: 'test'
+    ports:
+      - "3000:3000"
+    command: sleep infinity
+    restart: unless-stopped
