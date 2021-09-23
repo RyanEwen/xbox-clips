@@ -109,7 +109,7 @@ class App extends React.Component {
 
     handleGamertagChange = (e) => {
         if (e.key == 'Enter') {
-            this.props.setGamertag(e.target.value)
+            this.props.setGamertag(e.target.value || null)
         }
     }
 
@@ -122,9 +122,9 @@ class App extends React.Component {
                 <CssBaseline />
                 <SwipeableDrawer open={drawerOpen} onClose={this.closeDrawer} onOpen={this.openDrawer}>
                     <List className={classes.drawerList} component="nav">
-                        <NavListItem onClick={this.closeDrawer} to={paths.root} primary="Home" exact />
-                        <NavListItem onClick={this.closeDrawer} to={paths.clips} primary="Clips" />
-                        <NavListItem onClick={this.closeDrawer} to={paths.screenshots} primary="Screenshots" />
+                        {/* <NavListItem onClick={this.closeDrawer} to={paths.root} primary="Home" exact /> */}
+                        <NavListItem onClick={this.closeDrawer} to={paths.clips} disabled={!gamertag} primary="Clips" />
+                        <NavListItem onClick={this.closeDrawer} to={paths.screenshots} disabled={!gamertag} primary="Screenshots" />
                     </List>
                 </SwipeableDrawer>
                 <AppBar classes={{ root: classes.appBar }} position='fixed'>
@@ -158,17 +158,25 @@ class App extends React.Component {
                     <Box className={classes.innerBox}>
                         <Switch>
                             <Route path={paths.root} exact>
-                                {/* <Welcome /> */}
-                                <Redirect to={paths.clips} />
+                                {!gamertag &&
+                                    <Welcome />
+                                }
+                                {gamertag &&
+                                    <Redirect to={paths.clips} />
+                                }
                             </Route>
 
-                            <Route path={paths.clips}>
-                                <Clips />
-                            </Route>
+                            {gamertag &&
+                                <Route path={paths.clips}>
+                                    <Clips />
+                                </Route>
+                            }
 
-                            <Route path={paths.screenshots}>
-                                <Screenshots />
-                            </Route>
+                            {gamertag &&
+                                <Route path={paths.screenshots}>
+                                    <Screenshots />
+                                </Route>
+                            }
 
                             <Route path={paths.root}>
                                 <NotFound homePath={paths.root} />
