@@ -34,21 +34,14 @@ class Clips extends React.Component {
     componentDidMount = () => {
         const { gamertag } = this.props
 
-        if (gamertag) {
-            this.fetchClips(gamertag)
-        }
+        this.fetchClips(gamertag)
     }
 
-    // componentDidUpdate(prevProps) {
-    //     const { gamertag: oldGamertag } = prevProps
-    //     const { gamertag } = this.props
-
-    //     if (gamertag && gamertag !== oldGamertag) {
-    //         this.fetchClips(gamertag)
-    //     }
-    // }
-
     fetchClips = async (gamertag) => {
+        if (!gamertag) {
+            return
+        }
+
         try {
             this.setState({
                 waits: this.state.waits + 1,
