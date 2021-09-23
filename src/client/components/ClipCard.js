@@ -26,6 +26,10 @@ export default function ClipCard(props) {
     const { clip } = props
     const classes = useStyles()
 
+    if (!clip) {
+        return 'Clip not found'
+    }
+
     return (
         <video className={classes.videoPlayer} poster={clip.thumbnails[0].uri} preload="auto" controls>
             <source src={clip.gameClipUris[0].uri} type="video/mp4" />

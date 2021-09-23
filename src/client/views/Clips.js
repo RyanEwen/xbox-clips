@@ -1,9 +1,8 @@
 import _ from 'lodash'
 import Container from '@material-ui/core/Container'
 import List from '@material-ui/core/List'
-import { withStyles } from '@material-ui/core/styles'
-import MenuBookIcon from '@material-ui/icons/MenuBook'
-import React from 'react'
+import { withStyles, makeStyles } from '@material-ui/core/styles'
+import React, { useContext } from "react"
 import Box from '@material-ui/core/Box'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { Link as RouterLink, Route, Switch, useParams, useRouteMatch, withRouter } from "react-router-dom"
@@ -11,6 +10,7 @@ import { withAppContext } from '../context/AppContextProvider'
 import Heading from '../components/Heading'
 import ClipListItem from '../components/ClipListItem'
 import ClipCard from '../components/ClipCard'
+import { AppContext } from "../context/AppContextProvider"
 import API from '../classes/API'
 
 const styles = (theme) => ({
@@ -20,21 +20,22 @@ const styles = (theme) => ({
     breadcrumbs: {
         marginTop: theme.spacing(2),
     },
-    clipBox: {
-        marginTop: theme.spacing(2),
-    },
 })
 
 class Clips extends React.Component {
     state = {
-        waits: 0,
+        waits: 1,
         clips: [],
     }
 
-    componentDidMount = () => {
+    componentDidMount = async () => {
         const { gamertag } = this.props
 
-        this.fetchClips(gamertag)
+        await this.fetchClips(gamertag)
+
+        this.setState({
+            waits: this.state.waits - 1,
+        })
     }
 
     fetchClips = async (gamertag) => {
@@ -66,18 +67,14 @@ class Clips extends React.Component {
 
         return (
             <Container maxWidth="sm">
-                <Heading icon={<MenuBookIcon />}>
-                    Clips
-                </Heading>
-                {!gamertag &&
-                    'Enter a Gamertag'
-                }
-                {waits > 0 &&
+                {waits > 0 && <>
+                    <Heading>{`${gamertag}'s Clips`}</Heading>
                     <LinearProgress className={classes.loading} />
-                }
-                {waits == 0 && gamertag &&
+                </>}
+                {waits == 0 &&
                     <Switch>
                         <Route path={`${path}/`} exact>
+                            <Heading>{`${gamertag}'s Clips`}</Heading>
                             <List>
                                 {clips.map(clip =>
                                     <ClipListItem
@@ -91,9 +88,7 @@ class Clips extends React.Component {
                             </List>
                         </Route>
                         <Route path={`${path}/:clipId`}>
-                            <Box className={classes.clipBox}>
-                                <MyClipCard clips={clips} />
-                            </Box>
+                            <MyClipCard clips={clips} />
                         </Route>
                     </Switch>
                 }
@@ -102,16 +97,27 @@ class Clips extends React.Component {
     }
 }
 
+const useStyles = makeStyles((theme) => ({
+    clipBox: {
+        marginTop: theme.spacing(2),
+    },
+}))
+
 function MyClipCard(props) {
-    const { clipId } = useParams()
+    const classes = useStyles(props)
+    const { gamertag } = useContext(AppContext)
     const { clips } = props
+    const { clipId } = useParams()
     const clip = clips.find(clip => clip.gameClipId == clipId)
 
-    return (
-        <ClipCard
-            clip={clip}
-        />
-    )
+    return <>
+        <Heading>{`${gamertag} - ${clip.titleName}`}</Heading>
+        <Box className={classes.clipBox}>
+            <ClipCard
+                clip={clip}
+            />
+        </Box>
+    </>
 }
 
 export default withAppContext(withRouter(withStyles(styles, { withTheme: true })(Clips)))
