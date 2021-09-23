@@ -18,10 +18,10 @@ export default function Welcome(props) {
     return (
         <Container maxWidth="xs">
             <Heading icon={<AssignmentTurnedInIcon />}>
-                Welcome!
+                Welcome
             </Heading>
             <Box spacing={2} className={classes.box}>
-                <Typography paragraph>Welcome to Xbox Clips!</Typography>
+                <Typography paragraph>Enter a gamertag at the top of the page to get started.</Typography>
             </Box>
         </Container>
     )
