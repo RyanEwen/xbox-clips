@@ -39,14 +39,14 @@ class Clips extends React.Component {
         }
     }
 
-    componentDidUpdate(prevProps) {
-        const { gamertag: oldGamertag } = prevProps
-        const { gamertag } = this.props
+    // componentDidUpdate(prevProps) {
+    //     const { gamertag: oldGamertag } = prevProps
+    //     const { gamertag } = this.props
 
-        if (gamertag && gamertag !== oldGamertag) {
-            this.fetchClips(gamertag)
-        }
-    }
+    //     if (gamertag && gamertag !== oldGamertag) {
+    //         this.fetchClips(gamertag)
+    //     }
+    // }
 
     fetchClips = async (gamertag) => {
         try {
