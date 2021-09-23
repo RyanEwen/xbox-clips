@@ -13,7 +13,7 @@ ReactDOM.render(
         <Router>
             <Switch>
                 {/* App */}
-                <Route path={`/${baseURL}`}>
+                <Route path={`/${baseURL}/:gamertag?`}>
                     <AppContextProvider>
                         <App />
                     </AppContextProvider>

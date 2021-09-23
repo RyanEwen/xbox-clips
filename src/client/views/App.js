@@ -158,8 +158,8 @@ class App extends React.Component {
                     <Box className={classes.innerBox}>
                         <Switch>
                             <Route path={paths.root} exact>
-                                <Welcome />
-                                {/* <Redirect to={paths.clips} /> */}
+                                {/* <Welcome /> */}
+                                <Redirect to={paths.clips} />
                             </Route>
 
                             <Route path={paths.clips}>

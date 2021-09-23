@@ -1,6 +1,7 @@
 import Button from '@material-ui/core/Button'
 import { withSnackbar } from 'notistack'
 import React from "react"
+import { generatePath } from 'react-router'
 import { withRouter } from "react-router-dom"
 
 export const AppContext = React.createContext()
@@ -8,24 +9,44 @@ export const AppContext = React.createContext()
 class AppContextProvider extends React.Component {
     state = {
         gamertag: null,
+        paths: null,
     }
 
-    constructor(props) {
-        super(props)
+    componentDidMount = () => {
+        const { url, params } = this.props.match
 
-        const { match: { url } } = props
+        this.setState({
+            gamertag: params.gamertag,
+            paths: {
+                root: `${url}`,
+                clips: `${url}/clips`,
+                screenshots: `${url}/screenshots`,
+            },
+        })
+    }
 
-        this.paths = {
-            root: `${url}`,
-            clips: `${url}/clips`,
-            screenshots: `${url}/screenshots`,
+    componentDidUpdate(prevProps) {
+        const { url: oldUrl } = prevProps.match
+        const { url, params } = this.props.match
+
+        if (url != oldUrl) {
+            this.setState({
+                gamertag: params.gamertag,
+                paths: {
+                    root: `${url}`,
+                    clips: `${url}/clips`,
+                    screenshots: `${url}/screenshots`,
+                },
+            })
         }
     }
 
     setGamertag = (gamertag) => {
-        this.setState({
+        const path = generatePath(this.props.match.path, {
             gamertag,
         })
+
+        this.props.history.push(path)
     }
 
     showMessage = (msg, options) => {
@@ -53,6 +74,11 @@ class AppContextProvider extends React.Component {
     closeSnackbar = this.props.closeSnackbar
 
     render() {
+        // wait until component has mounted
+        if (!this.state.paths) {
+            return <></>
+        }
+
         return (
             <AppContext.Provider
                 value={{
@@ -61,7 +87,6 @@ class AppContextProvider extends React.Component {
                     showMessage: this.showMessage,
                     showError: this.showError,
                     closeSnackbar: this.closeSnackbar,
-                    paths: this.paths,
                 }}
             >
                 {this.props.children}
