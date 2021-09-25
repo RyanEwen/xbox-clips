@@ -7,38 +7,38 @@ import express from 'express'
 import middleware from './middleware'
 import dotenv from 'dotenv'
 
-    try {
-        dotenv.config()
+try {
+    dotenv.config()
 
     // SETUP XBOX LIVE API
 
-        const xla = require('xbox-live-api')
+    const xla = require('xbox-live-api')
 
-        xla.username = process.env.XLA_USER
-        xla.password = process.env.XLA_PASS
-        xla.useragent = process.env.XLA_USER_AGENT
+    xla.username = process.env.XLA_USER
+    xla.password = process.env.XLA_PASS
+    xla.useragent = process.env.XLA_USER_AGENT
 
-        // SETUP WEB SERVER
+    // SETUP WEB SERVER
 
-        const app = express()
+    const app = express()
 
-        app.set('trust proxy', true)
+    app.set('trust proxy', true)
 
-        // search for actual files before serving app in their place
-        app.use(express.static(path.join(__dirname, '..', 'client')))
-        app.use(express.static(path.join(__dirname, '..', '..', 'static')))
+    // search for actual files before serving app in their place
+    app.use(express.static(path.join(__dirname, '..', 'client')))
+    app.use(express.static(path.join(__dirname, '..', '..', 'static')))
 
     // clips
-        app.post('/api/clips/:gamertag', (req, res) => {
-            try {
+    app.post('/api/clips/:gamertag', (req, res) => {
+        try {
             xla.GetClipsForGamer(req.params.gamertag, '', '', function (json) {
-                    console.log(json)
-                    res.send(json)
-                })
-            } catch (err) {
+                console.log(json)
+                res.send(json)
+            })
+        } catch (err) {
             res.status(500).send(err.message)
-            }
-        })
+        }
+    })
 
         app.post('/api/screenshots/:gamertag', (req, res) => {
             try {
@@ -63,16 +63,15 @@ import dotenv from 'dotenv'
         })
 
     // catch-all to serve the html file
-        app.get('*', (req, res) => {
-            res.sendFile(path.join(__dirname, '..', 'client', 'index.html'))
-        })
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, '..', 'client', 'index.html'))
+    })
 
-        const http = app.listen(process.env.PORT || 3000, process.env.INTERFACE || '0.0.0.0')
+    const http = app.listen(process.env.PORT || 3000, process.env.INTERFACE || '0.0.0.0')
 
-        console.log('Express started')
+    console.log('Express started')
 
-    } catch (err) {
-        console.error(err)
-        process.exit(1)
-    }
-})()
+} catch (err) {
+    console.error(err)
+    process.exit(1)
+}
