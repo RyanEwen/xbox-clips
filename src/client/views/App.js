@@ -89,7 +89,6 @@ class App extends React.Component {
 
     state = {
         drawerOpen: false,
-        waits: 0,
     }
 
     componentDidUpdate(prevProps) {
@@ -115,83 +114,78 @@ class App extends React.Component {
 
     render() {
         const { classes, paths, gamertag } = this.props
-        const { drawerOpen, waits } = this.state
+        const { drawerOpen } = this.state
 
-        return (
-            <>
-                <CssBaseline />
-                <SwipeableDrawer open={drawerOpen} onClose={this.closeDrawer} onOpen={this.openDrawer}>
-                    <List className={classes.drawerList} component="nav">
-                        {/* <NavListItem onClick={this.closeDrawer} to={paths.root} primary="Home" exact /> */}
-                        <NavListItem onClick={this.closeDrawer} to={paths.clips} disabled={!gamertag} primary="Clips" />
-                        <NavListItem onClick={this.closeDrawer} to={paths.screenshots} disabled={!gamertag} primary="Screenshots" />
-                    </List>
-                </SwipeableDrawer>
-                <AppBar classes={{ root: classes.appBar }} position='fixed'>
-                    <Toolbar>
-                        <Tooltip title="Menu">
-                            <IconButton
-                                color="inherit"
-                                edge="start"
-                                aria-label="open menu"
-                                onClick={this.openDrawer}
-                            >
-                                <MenuIcon />
-                            </IconButton>
-                        </Tooltip>
-                        <Typography component={RouterLink} to={paths.root} variant="h6" noWrap className={classes.title}>Xbox Clips</Typography>
-                        <div className={classes.search}>
-                            <InputBase
-                                classes={{
-                                    root: classes.inputRoot,
-                                    input: classes.inputInput,
-                                }}
-                                placeholder="Enter a Gamertag..."
-                                defaultValue={gamertag}
-                                onKeyDown={this.handleGamertagChange}
-                            />
-                        </div>
-                    </Toolbar>
-                </AppBar>
-                <div className={classes.toolbar} />
-                <Box ref={this.scrollPaneRef} className={classes.outerBox}>
-                    <Box className={classes.innerBox}>
-                        <Switch>
-                            <Route path={paths.root} exact>
-                                {!gamertag &&
-                                    <Welcome />
-                                }
-                                {gamertag &&
-                                    <Redirect to={paths.clips} />
-                                }
-                            </Route>
-
-                            {gamertag &&
-                                <Route path={paths.clips}>
-                                    <Clips />
-                                </Route>
+        return <>
+            <CssBaseline />
+            <SwipeableDrawer open={drawerOpen} onClose={this.closeDrawer} onOpen={this.openDrawer}>
+                <List className={classes.drawerList} component="nav">
+                    <NavListItem onClick={this.closeDrawer} to={paths.clips} disabled={!gamertag} primary="Clips" />
+                    <NavListItem onClick={this.closeDrawer} to={paths.screenshots} disabled={!gamertag} primary="Screenshots" />
+                </List>
+            </SwipeableDrawer>
+            <AppBar classes={{ root: classes.appBar }} position='fixed'>
+                <Toolbar>
+                    <Tooltip title="Menu">
+                        <IconButton
+                            color="inherit"
+                            edge="start"
+                            aria-label="open menu"
+                            onClick={this.openDrawer}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <Typography component={RouterLink} to={paths.root} variant="h6" noWrap className={classes.title}>Xbox Clips</Typography>
+                    <div className={classes.search}>
+                        <InputBase
+                            classes={{
+                                root: classes.inputRoot,
+                                input: classes.inputInput,
+                            }}
+                            placeholder="Enter a Gamertag..."
+                            defaultValue={gamertag}
+                            onKeyDown={this.handleGamertagChange}
+                        />
+                    </div>
+                </Toolbar>
+            </AppBar>
+            <div className={classes.toolbar} />
+            <Box ref={this.scrollPaneRef} className={classes.outerBox}>
+                <Box className={classes.innerBox}>
+                    <Switch>
+                        <Route path={paths.root} exact>
+                            {!gamertag &&
+                                <Welcome />
                             }
-
                             {gamertag &&
-                                <Route path={paths.screenshots}>
-                                    <Screenshots />
-                                </Route>
+                                <Redirect to={paths.clips} />
                             }
+                        </Route>
 
-                            <Route path={paths.root}>
-                                <NotFound homePath={paths.root} />
+                        {gamertag &&
+                            <Route path={paths.clips}>
+                                <Clips />
                             </Route>
-                        </Switch>
-                    </Box>
+                        }
 
-                    <Box mt={1}>
-                        <Copyright />
-                    </Box>
+                        {gamertag &&
+                            <Route path={paths.screenshots}>
+                                <Screenshots />
+                            </Route>
+                        }
+
+                        <Route path={paths.root}>
+                            <NotFound homePath={paths.root} />
+                        </Route>
+                    </Switch>
                 </Box>
 
-                <Snackbar open={waits > 0} message="Loading..." />
-            </>
-        )
+                <Box mt={1}>
+                    <Copyright />
+                </Box>
+            </Box>
+        </>
     }
 }
 
