@@ -4,13 +4,12 @@ import _ from 'lodash'
 import path from 'path'
 import dotenv from 'dotenv'
 import express from 'express'
+import xla from 'xbox-live-api'
 
 try {
     dotenv.config()
 
     // SETUP XBOX LIVE API
-
-    const xla = require('xbox-live-api')
 
     xla.username = process.env.XLA_USER
     xla.password = process.env.XLA_PASS
