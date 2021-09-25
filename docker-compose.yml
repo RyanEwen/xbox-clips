@@ -4,6 +4,7 @@ services:
   app:
     build: ./
     environment:
+      TZ: America/Toronto
       NODE_ENV: production
       # BASEURL: 'test'
     ports:
