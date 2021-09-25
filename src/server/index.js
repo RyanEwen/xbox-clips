@@ -2,12 +2,15 @@ console.log(`Starting in ${process.env.NODE_ENV} mode`)
 
 import _ from 'lodash'
 import path from 'path'
+import dotenv from 'dotenv'
 import express from 'express'
+import middleware from './middleware'
 import dotenv from 'dotenv'
 
-(async () => {
     try {
         dotenv.config()
+
+    // SETUP XBOX LIVE API
 
         const xla = require('xbox-live-api')
 
@@ -25,14 +28,15 @@ import dotenv from 'dotenv'
         app.use(express.static(path.join(__dirname, '..', 'client')))
         app.use(express.static(path.join(__dirname, '..', '..', 'static')))
 
+    // clips
         app.post('/api/clips/:gamertag', (req, res) => {
             try {
-                xla.GetClipsForGamer(req.params.gamertag, '', '', function(json) {
+            xla.GetClipsForGamer(req.params.gamertag, '', '', function (json) {
                     console.log(json)
                     res.send(json)
                 })
             } catch (err) {
-                res.status(500).send(err.message);
+            res.status(500).send(err.message)
             }
         })
 
@@ -58,7 +62,7 @@ import dotenv from 'dotenv'
             }
         })
 
-        // catch-all
+    // catch-all to serve the html file
         app.get('*', (req, res) => {
             res.sendFile(path.join(__dirname, '..', 'client', 'index.html'))
         })

@@ -5,13 +5,13 @@ import { withStyles, makeStyles } from '@material-ui/core/styles'
 import React, { useContext } from "react"
 import Box from '@material-ui/core/Box'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import { Link as RouterLink, Route, Switch, useParams, useRouteMatch, withRouter } from "react-router-dom"
+import { Route, Switch, useParams, withRouter } from "react-router-dom"
 import { withAppContext } from '../context/AppContextProvider'
 import Heading from '../components/Heading'
 import ClipListItem from '../components/ClipListItem'
 import ClipCard from '../components/ClipCard'
 import { AppContext } from "../context/AppContextProvider"
-import API from '../classes/API'
+import Utilities from '../classes/Utilities'
 
 const styles = (theme) => ({
     loading: {
@@ -25,13 +25,12 @@ const styles = (theme) => ({
 class Clips extends React.Component {
     state = {
         waits: 1,
+        player: null,
         clips: [],
     }
 
     componentDidMount = async () => {
-        const { gamertag } = this.props
-
-        await this.fetchClips(gamertag)
+        await this.fetchClips(this.props.gamertag)
 
         this.setState({
             waits: this.state.waits - 1,
@@ -48,7 +47,7 @@ class Clips extends React.Component {
                 waits: this.state.waits + 1,
             })
 
-            const { gameClips } = await API.Base.post(`/api/clips/${gamertag}`)
+            const { gameClips } = await Utilities.fetch(`/api/clips/${gamertag}`)
 
             this.setState({
                 waits: this.state.waits - 1,
@@ -113,9 +112,7 @@ function MyClipCard(props) {
     return <>
         <Heading>{`${gamertag} - ${clip.titleName}`}</Heading>
         <Box className={classes.clipBox}>
-            <ClipCard
-                clip={clip}
-            />
+            <ClipCard clip={clip} />
         </Box>
     </>
 }
