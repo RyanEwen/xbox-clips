@@ -4,8 +4,6 @@ import _ from 'lodash'
 import path from 'path'
 import dotenv from 'dotenv'
 import express from 'express'
-import middleware from './middleware'
-import dotenv from 'dotenv'
 
 try {
     dotenv.config()
@@ -39,28 +37,6 @@ try {
             res.status(500).send(err.message)
         }
     })
-
-        app.post('/api/screenshots/:gamertag', (req, res) => {
-            try {
-                xla.GetScreenshotsForGamer(req.params.gamertag, '', '', function(json) {
-                    console.log(json)
-                    res.send(json)
-                })
-            } catch (err) {
-                res.status(500).send(err.message)
-            }
-        })
-
-        app.post('/api/xuid/:gamertag', (req, res) => {
-            try {
-                xla.GetXuid(req.params.gamertag, function(json) {
-                    console.log(json)
-                    res.send(json)
-                })
-            } catch (err) {
-                res.status(500).send(err.message)
-            }
-        })
 
     // catch-all to serve the html file
     app.get('*', (req, res) => {
