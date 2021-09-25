@@ -2,19 +2,11 @@ console.log(`Starting in ${process.env.NODE_ENV} mode`)
 
 import _ from 'lodash'
 import path from 'path'
-import dotenv from 'dotenv'
 import express from 'express'
-import xla from 'xbox-live-api'
+import middleware from './middleware'
+import { XSAPI } from '@xboxreplay/xboxlive-api'
 
 try {
-    dotenv.config()
-
-    // SETUP XBOX LIVE API
-
-    xla.username = process.env.XLA_USER
-    xla.password = process.env.XLA_PASS
-    xla.useragent = process.env.XLA_USER_AGENT
-
     // SETUP WEB SERVER
 
     const app = express()
@@ -26,13 +18,24 @@ try {
     app.use(express.static(path.join(__dirname, '..', '..', 'static')))
 
     // clips
-    app.post('/api/clips/:gamertag', (req, res) => {
+    app.post('/api/clips/:gamertag', middleware.XBLAuthenticateMiddleware(), async (req, res) => {
         try {
-            xla.GetClipsForGamer(req.params.gamertag, '', '', function (json) {
-                console.log(json)
-                res.send(json)
+            const XSAPIInstance = new XSAPI(req.authorization)
+
+            const player = await XSAPIInstance.getPlayerSettings(req.params.gamertag, [
+                'UniqueModernGamertag',
+                'GameDisplayPicRaw',
+                'Gamerscore',
+                'Location',
+            ])
+
+            const clips = await XSAPIInstance.getPlayerGameClips(req.params.gamertag, {
+                continuationToken: req.params['continuation-token'],
             })
-        } catch (err) {
+
+            res.send({ player, clips })
+
+        } catch(err) {
             res.status(500).send(err.message)
         }
     })
