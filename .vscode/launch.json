@@ -7,7 +7,7 @@
             "request": "launch",
             "runtimeExecutable": "npx",
             "runtimeArgs": [
-                "nodemon",
+                "nodemon"
             ],
             "restart": true,
             "smartStep": true,
@@ -16,12 +16,20 @@
             ]
         },
         {
-            "name": "Debug Client",
+            "name": "Debug Client (Chrome)",
             "type": "pwa-chrome",
             "request": "launch",
             "url": "http://localhost:3000",
             "webRoot": "${workspaceFolder}",
-            // "userDataDir": false,
-        }
+            // "userDataDir": false
+        },
+        {
+            "name": "Debug Client (Edge)",
+            "request": "launch",
+            "type": "pwa-msedge",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}",
+            // "userDataDir": false
+        },
     ]
 }
