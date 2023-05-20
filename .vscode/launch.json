@@ -1,6 +1,22 @@
 {
     "version": "0.2.0",
+    "compounds": [
+        {
+            "name": "Webpack and Debug",
+            "configurations": [
+                "Webpack",
+                "Debug Server",
+            ],
+        }
+    ],
     "configurations": [
+        {
+            "name": "Webpack",
+            "type": "node",
+            "request": "launch",
+            "preLaunchTask": "npm: build-dev",
+            "runtimeExecutable": "npm",
+        },
         {
             "name": "Debug Server",
             "type": "node",
@@ -31,5 +47,5 @@
             "webRoot": "${workspaceFolder}",
             // "userDataDir": false
         },
-    ]
+    ],
 }

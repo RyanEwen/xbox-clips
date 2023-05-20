@@ -9,5 +9,4 @@
     ],
     "remoteUser": "node",
     "postCreateCommand": "npm install",
-    "postStartCommand": "npm run build-dev",
 }
